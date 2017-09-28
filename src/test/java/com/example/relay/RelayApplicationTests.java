@@ -7,6 +7,8 @@ import com.example.relay.model.Work;
 import com.example.relay.repository.ContributionRepository;
 import com.example.relay.repository.UserRepository;
 import com.example.relay.repository.WorkRepository;
+import io.restassured.RestAssured;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 
 
@@ -35,8 +39,23 @@ public class RelayApplicationTests {
 	User user;
 	Work work;
 
+	@Before
+	public void setup(){
+		RestAssured.port = 8080;
+	}
+
 	@Test
 	public void 회원가입_테스트() throws Exception {
+		/*given()
+				.param("email","tester@test.com")
+				.param("name","tester")
+				.param("password", "123")
+				.when()
+					.get("/addUser")
+				.then()
+					.statusCode(200)
+					.header("Location",containsString("http://localhost:8080/index"));
+*/
 		User user = new User();
 		user.setName("tester");
 		user.setPassword("123");
