@@ -30,14 +30,15 @@ public class UserController {
         return "/user/login";
     }
 
-    @PostMapping("/loginProcessing")
-    public String loginProcessing(String email, String password){
-        System.out.println("ㅇㅋ");
-        User user = userRepository.findByEmail(email);
+    @GetMapping("/signUp")
+    public String signUp(){
+        return "/user/signUp";
+    }
 
-        if(user.getPassword().equals(password)){
-
-        }
+    @PostMapping("/signUp")
+    public String signUp(User user){
+        userRepository.save(user);
         return "/index";
     }
+
 }
