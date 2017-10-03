@@ -1,6 +1,5 @@
 package com.example.relay;
 
-import com.example.relay.controller.UserController;
 import com.example.relay.model.Contribution;
 import com.example.relay.model.User;
 import com.example.relay.model.Work;
@@ -18,8 +17,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertEquals;
 
 
@@ -57,14 +54,14 @@ public class RelayApplicationTests {
 					.header("Location",containsString("http://localhost:8080/index"));
 */
 		User user = new User();
-		user.setName("tester");
+		user.setUsername("tester");
 		user.setPassword("123");
-		user.setEamil("test@test");
+		user.setEmail("test@test");
 		userRepository.save(user);
 
 		//확인
 		User dbUser = userRepository.findOne(1L);
-		assertEquals(dbUser.getName(),"tester");
+		assertEquals(dbUser.getUsername(),"tester");
 	}
 
 	@Test
@@ -92,9 +89,9 @@ public class RelayApplicationTests {
 	public void 프로젝트참여_테스트()throws Exception{
 		Contribution contribution = new Contribution();
 		User creater = new User();
-		creater.setName("creater");
+		creater.setUsername("creater");
 		User participant = new User();
-		participant.setName("participant");
+		participant.setUsername("participant");
 		Work work = new Work();
 
 		//프로젝트 생성
@@ -111,16 +108,16 @@ public class RelayApplicationTests {
 		List<Contribution> list = contributionRepository.findAll();
 
 		for(Contribution a : list){
-			System.out.println(a.getUser().getName()+"점수:"+a.getScore());
+			System.out.println(a.getUser().getUsername()+"점수:"+a.getScore());
 		}
 	}
 
 	@Test
 	public void WORK_ADD_테스트()throws Exception{
 		User creater = new User();
-		creater.setName("creater");
+		creater.setUsername("creater");
 		User participant = new User();
-		participant.setName("participant");
+		participant.setUsername("participant");
 
 		Work work = new Work();
 		work.setContent("init");
@@ -156,7 +153,7 @@ public class RelayApplicationTests {
 		List<Contribution> list = contributionRepository.findAll();
 
 		for(Contribution a : list){
-			System.out.println(a.getUser().getName()+"점수:"+a.getScore());
+			System.out.println(a.getUser().getUsername()+"점수:"+a.getScore());
 		}
 
 		System.out.println("최종추가:"+workRepository.findOne(1L).getContent());

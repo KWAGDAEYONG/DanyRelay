@@ -23,3 +23,6 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+###google인증정보###
+/src/main/resources/google.properties

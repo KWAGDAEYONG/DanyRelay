@@ -7,30 +7,41 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import javax.servlet.Filter;
+
 @Configuration
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserRepository userRepository;
 
+    private final Filter googleSignUpFilter;
+
+    public SecurityConfig(Filter googleSignUpFilter){
+        this.googleSignUpFilter = googleSignUpFilter;
+    }
+
     @Override
     public void configure(WebSecurity webSecurity)throws Exception{
-        webSecurity.ignoring().antMatchers("/");
+        webSecurity.ignoring().antMatchers("/","/h2-console/**","/signUpByGoogle","/signInByGoogle");
     }
 
     @Override
     protected void configure(HttpSecurity httpSecurity)throws Exception{
         httpSecurity
                 .authorizeRequests()
-                    .antMatchers("/login","/signUp","/signInByGoogle","/signInByFacebook","/signInByNaver").permitAll()
-                    .antMatchers("/**").authenticated()
+                    .antMatchers("/login","/signUp","/signUpByFacebook","/signUpByNaver","/setNickName","/signUpFinish").permitAll()
+                    .anyRequest().authenticated()
                     .and()
 
                 .formLogin()
@@ -45,6 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessUrl("/")
                     .and()
                 .csrf().disable()
+                .addFilterBefore(googleSignUpFilter, BasicAuthenticationFilter.class)
                 .httpBasic();
     }
 
@@ -60,6 +72,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationSuccessHandler successHandler(){
-        return new CustomLoginSuccessHandler("/");
+        return new CustomSuccessHandler("/");
     }
 }

@@ -20,10 +20,21 @@ public class User implements UserDetails {
     private String password;
     @Column(nullable = false)
     private String username;
-
+    @Column(nullable = false)
+    private String nickname;
+    @Column(nullable = false)
+    private String type;
 
     @OneToMany(mappedBy = "user")
     private List<Contribution> contributions;
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -37,6 +48,13 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
 
     public void setContributions(List<Contribution> contributions) {
         this.contributions = contributions;
@@ -93,5 +111,10 @@ public class User implements UserDetails {
         return true;
     }
 
-
+    public void signIn(String name, String email, String nickname){
+        this.username = name;
+        this.email = email;
+        this.password = "TEMPPASSWOD";
+        this.nickname = nickname;
+    }
 }

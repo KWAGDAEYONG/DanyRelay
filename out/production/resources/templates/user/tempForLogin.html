@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+</head>
+<body>
+<form action="/loginProcessing" method="post" id="form">
+    이메일 : <input id="1" type="text" name="username" value="{{{email}}}"><br>
+    비밀번호 : <input id="2" type="password" name="password" value="{{{password}}}"><br>
+    <input type="submit" value="로그인">
+</form>
+<script>
+    window.onload = function () {
+        console.log(document.getElementById("1").value);
+        console.log(document.getElementById("2").value);
+        document.getElementById("form").submit();
+    }
+</script>
+</body>
+</html>
