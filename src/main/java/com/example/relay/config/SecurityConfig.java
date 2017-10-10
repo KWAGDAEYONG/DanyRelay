@@ -1,5 +1,6 @@
 package com.example.relay.config;
 
+import com.example.relay.model.User;
 import com.example.relay.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,8 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.Filter;
+import javax.servlet.http.HttpSession;
+
 
 @Configuration
 @EnableWebSecurity
@@ -27,13 +30,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final Filter googleSignUpFilter;
 
-    public SecurityConfig(Filter googleSignUpFilter){
+    private HttpSession httpSession;
+
+
+    public SecurityConfig(Filter googleSignUpFilter, HttpSession httpSession){
         this.googleSignUpFilter = googleSignUpFilter;
+        this.httpSession = httpSession;
     }
+
+
+
 
     @Override
     public void configure(WebSecurity webSecurity)throws Exception{
-        webSecurity.ignoring().antMatchers("/","/h2-console/**","/signUpByGoogle","/signInByGoogle");
+        webSecurity.ignoring().antMatchers("/h2-console/**","/signUpByGoogle","/signInByGoogle");
     }
 
     @Override
@@ -65,7 +75,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         authenticationManagerBuilder.userDetailsService(new UserDetailsService() {
             @Override
             public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-                return userRepository.findByEmail(username);
+                User user = userRepository.findByEmail(username);
+                httpSession.setAttribute("loginUser", user);
+                return user;
             }
         });
     }
@@ -74,4 +86,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationSuccessHandler successHandler(){
         return new CustomSuccessHandler("/");
     }
+
 }
