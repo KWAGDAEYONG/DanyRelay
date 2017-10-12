@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WorkList</title>
+</head>
+<body>
+
+    <table>
+
+        <tr>
+            <th>index</th>
+            <th>title</th>
+        </tr>
+        {{#list}}
+        <tr>
+            <td>{{id}}</td>
+            <td><a href="/work/{{id}}">{{title}}</a></td>
+        </tr>
+        {{/list}}
+    </table>
+
+</body>
+</html>
